@@ -2,13 +2,14 @@
 
 set -x
 
+# for xfce graphical
 if [ -f /lib/systemd/system/lightdm.service ];then
 	systemctl enable lightdm
 fi
 
-
-
+# for gdm graphical
 if [ -f /lib/systemd/system/gdm.service ] ; then
+
 	cat >> /lib/systemd/system/gdm.service << "EOF"
 
 [Install]
@@ -16,9 +17,9 @@ WantedBy=graphical.target
 EOF
 
 	ln -svf /lib/systemd/system/gdm.service /etc/systemd/system/graphical.target.wants/gdm.service
-fi
+	sed -i '/\[security\]/a AllowRoot=true' /etc/gdm3/daemon.conf
+	sed -i 's/^auth.*pam_succeed_if\.so.*user != root.*/#&/' /etc/pam.d/gdm-password
 
-if [ -f /lib/systemd/system/gdm.service ];then
 	systemctl enable gdm
 fi
 
