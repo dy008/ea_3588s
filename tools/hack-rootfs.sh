@@ -29,5 +29,21 @@ chmod +x /etc/rc.local
 
 sed -i 's/NanoPC T6/EA_3588S/g' /etc/armbian-*
 
+
+# add user admin
+adduser --quiet --disabled-password --gecos "" admin
+echo "admin:admin" | chpasswd
+usermod -aG sudo admin
+
+# add user teamhd
+adduser --quiet --disabled-password --gecos "" teamhd
+echo "teamhd:teamhd" | chpasswd
+usermod -aG sudo teamhd
+
+# add user linaro
+adduser --quiet --disabled-password --gecos "" linaro
+echo "linaro:linaro" | chpasswd
+usermod -aG sudo linaro
+
 echo ok > /etc/hack
 
