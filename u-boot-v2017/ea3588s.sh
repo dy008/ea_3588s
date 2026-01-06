@@ -2,8 +2,8 @@
 
 set -x
 
-export GCC="/usr/"
-export CROSS_COMPILE_ARM64="${GCC}/bin/aarch64-linux-gnu-"
+tool=$(which aarch64-linux-gnu-gcc)
+export CROSS_COMPILE_ARM64="${tool%gcc}"
 echo "using gcc: [${CROSS_COMPILE_ARM64}]"
 
 rm -rf spl/u-boot-spl*

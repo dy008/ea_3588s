@@ -15,7 +15,8 @@ RKBIN_TOOLS=../rkbin/tools
 CROSS_COMPILE_ARM32=~/toolchains/gcc-arm-11.2-2022.02-x86_64-arm-none-linux-gnueabihf/bin/arm-none-linux-gnueabihf-
 # CROSS_COMPILE_ARM64=~/toolchains/gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-
 
-CROSS_COMPILE_ARM64=/usr/bin/aarch64-linux-gnu-
+tool=$(which aarch64-linux-gnu-gcc)
+CROSS_COMPILE_ARM64="${tool%gcc}"
 echo "using gcc: [${CROSS_COMPILE_ARM64}]"
 
 ########################################### User not touch #############################################
