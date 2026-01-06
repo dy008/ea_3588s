@@ -45,5 +45,10 @@ adduser --quiet --disabled-password --gecos "" linaro
 echo "linaro:linaro" | chpasswd
 usermod -aG sudo linaro
 
+if [ -f /root/.not_logged_in_yet ] ; then
+	rm -f /root/.not_logged_in_yet
+fi
+
+
 echo ok > /etc/hack
 
