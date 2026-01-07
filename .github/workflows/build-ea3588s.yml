@@ -106,7 +106,7 @@ jobs:
         if: ${{ steps.compile_d3588_uboot.outputs.status }} == 'success' && !cancelled()
         run: |
           mkdir -p /builder/ea_3588s.git/rockdev/
-          cp -a /builder/ea_3588s.git/official/boot/boot.img /builder/ea_3588s.git/rockdev/boot.img
+          cp -a /builder/ea_3588s.git/official/boot/boot.img-hack /builder/ea_3588s.git/rockdev/boot.img
           echo "status=success" >> ${GITHUB_OUTPUT}
 
       - name: Download armbian source code
