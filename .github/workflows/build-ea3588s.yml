@@ -100,13 +100,11 @@ jobs:
           md5sum ../rockdev/uboot.img
           echo "status=success" >> ${GITHUB_OUTPUT}
 
-      - name: Compile kernel-5.10.226 for ea_3588s
+      - name: copy kernel-5.10.160 for ea_3588s
         id: compile_d3588_kernel
-        working-directory: /builder/ea_3588s.git/kernel-5.10.226
+        working-directory: /builder/ea_3588s.git/kernel-5.10.160
         if: ${{ steps.compile_d3588_uboot.outputs.status }} == 'success' && !cancelled()
         run: |
-          ./ea3588s.sh
-          md5sum ../rockdev/boot.img
           echo "status=success" >> ${GITHUB_OUTPUT}
 
       - name: Download armbian source code
@@ -276,7 +274,7 @@ jobs:
 
             - "Armbian_ea_3588s" 固定前缀
             - "noble" 发行版，可选 (bullseye, bookworm, jammy, noble, focal, forky, oracular, plucky, resolute, trixie)
-            - "5.10.226" 内核版本号
+            - "5.10.160" 内核版本号
             - "cli" 桌面环境，可选 (cli,xfce,gnome)
             - "rockdev" 镜像类型，包括一下三种类型
               - rockdev: RKDevTool + 多个小image镜像（uboot.img、boot.img、rootfs.img等）
