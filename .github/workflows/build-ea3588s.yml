@@ -60,7 +60,7 @@ jobs:
           sudo rm -rf ~/{.cargo,.dotnet,.rustup}
           sudo timedatectl set-timezone "${TZ}"
           # init output prefix  ${{ steps.init.outputs.build_tag }}
-          echo "build_tag=Armbian_ea_3588s_${{ matrix.set_release }}_5.10.226_${{ matrix.set_desktop }}" >> ${GITHUB_OUTPUT}
+          echo "build_tag=Armbian_ea_3588s_${{ matrix.set_release }}_5.10.160_${{ matrix.set_desktop }}" >> ${GITHUB_OUTPUT}
           echo "status=success" >> ${GITHUB_OUTPUT}
 
       - name: Create simulated physical disk
@@ -262,7 +262,7 @@ jobs:
         uses: ncipollo/release-action@main
         if: ${{ steps.generate_rockdev_image.outputs.status }} == 'success' && !cancelled()
         with:
-          tag: Armbian_EA_3588S_Image_5.10.226
+          tag: Armbian_EA_3588S_Image_5.10.160
           artifacts: /builder/ea_3588s.git/release/*
           allowUpdates: true
           removeArtifacts: false
@@ -272,7 +272,7 @@ jobs:
             ### ea_3588s镜像说明
 
             1. 镜像命名规则
-            以 * Armbian_EA_3588S_noble_5.10.226_cli_rockdev.img.rar** 为例
+            以 * Armbian_EA_3588S_noble_5.10.160_cli_rockdev.img.rar** 为例
 
             - "Armbian_ea_3588s" 固定前缀
             - "noble" 发行版，可选 (bullseye, bookworm, jammy, noble, focal, forky, oracular, plucky, resolute, trixie)
