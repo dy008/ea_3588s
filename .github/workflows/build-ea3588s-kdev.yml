@@ -271,6 +271,8 @@ jobs:
           body: |
             ### ea_3588s镜像说明
 
+            **For kdev, just for fun**
+
             1. 镜像命名规则
             以 * Armbian_EA_3588S_noble_5.10.226_cli_rockdev.img.rar** 为例
 
