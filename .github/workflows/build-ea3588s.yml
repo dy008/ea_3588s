@@ -102,7 +102,7 @@ jobs:
 
       - name: copy kernel-5.10.160 for ea_3588s
         id: compile_d3588_kernel
-        working-directory: /builder/ea_3588s.git/kernel-5.10.160
+        working-directory: /builder/ea_3588s.git/
         if: ${{ steps.compile_d3588_uboot.outputs.status }} == 'success' && !cancelled()
         run: |
           mkdir -p /builder/ea_3588s.git/rockdev/
