@@ -176,6 +176,21 @@ jobs:
           sudo chmod +x /mnt/hack-rootfs.sh
           sudo chroot /mnt sh -c "/hack-rootfs.sh"
           sync
+
+          # add firmware to rootfs
+          sudo cp -a /builder/ea_3588s.git/official/firmware /mnt/
+
+          # add extra ko to rootfs
+          sudo mkdir -p /mnt/lib/modules/5.10.160/
+          sudo cp -a /builder/ea_3588s.git/official/extra  /mnt/lib/modules/5.10.160/
+
+          # add wifibt script
+          sudo cp -a /builder/ea_3588s.git/official/wifibt-init.service /mnt/usr/lib/systemd/system/
+
+          # add scripts
+          sudo cp -a /builder/ea_3588s.git/scripts/*.sh  /mnt/bin/
+          sudo chmod 755 /mnt/bin/*.sh
+
           sudo umount /mnt
           mkdir -p /builder/ea_3588s.git/release
           mkdir -p /builder/ea_3588s.git/ouput-temp/
@@ -271,8 +286,10 @@ jobs:
           body: |
             ### ea_3588s镜像说明
 
+            **TIPS: 本固件基于官方debian微改**
+
             1. 镜像命名规则
-            以 * Armbian_EA_3588S_noble_5.10.160_cli_rockdev.img.rar** 为例
+            以 **Armbian_EA_3588S_noble_5.10.160_cli_rockdev.img.rar** 为例
 
             - "Armbian_ea_3588s" 固定前缀
             - "noble" 发行版，可选 (bullseye, bookworm, jammy, noble, focal, forky, oracular, plucky, resolute, trixie)

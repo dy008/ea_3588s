@@ -2,6 +2,8 @@
 
 set -x
 
+systemctl daemon-reload
+
 # for xfce graphical
 if [ -f /lib/systemd/system/lightdm.service ];then
 	systemctl enable lightdm
@@ -21,6 +23,10 @@ EOF
 	sed -i 's/^auth.*pam_succeed_if\.so.*user != root.*/#&/' /etc/pam.d/gdm-password
 
 	systemctl enable gdm
+fi
+
+if [ -f /lib/systemd/system/wifibt-init.service ] ; then
+	systemctl enable wifibt-init.service
 fi
 
 systemctl daemon-reload
