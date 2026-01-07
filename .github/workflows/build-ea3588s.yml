@@ -185,13 +185,6 @@ jobs:
           cp -a /builder/ea_3588s.git/rockdev/boot.img /builder/ea_3588s.git/ouput-temp/
           mv /builder/armbian.git/output/images/rootfs.img /builder/ea_3588s.git/ouput-temp/
 
-          cd /builder/ea_3588s.git/ouput-temp/
-          mksquashfs rootfs.img  /builder/ea_3588s.git/release/${{ steps.init.outputs.build_tag }}_rootfs.img.squashfs
-          sha256sum /builder/ea_3588s.git/release/${{ steps.init.outputs.build_tag }}_rootfs.img.squashfs > \
-                      /builder/ea_3588s.git/release/${{ steps.init.outputs.build_tag }}_rootfs.img.squashfs.sha256
-          rar a /builder/ea_3588s.git/release/${{ steps.init.outputs.build_tag }}_rootfs.img.rar rootfs.img
-          sha256sum /builder/ea_3588s.git/release/${{ steps.init.outputs.build_tag }}_rootfs.img.rar > \
-                      /builder/ea_3588s.git/release/${{ steps.init.outputs.build_tag }}_rootfs.img.rar.sha256
           echo "status=success" >> ${GITHUB_OUTPUT}
 
       - name: Generate updatable image
@@ -285,9 +278,6 @@ jobs:
             - "noble" 发行版，可选 (bullseye, bookworm, jammy, noble, focal, forky, oracular, plucky, resolute, trixie)
             - "5.10.226" 内核版本号
             - "cli" 桌面环境，可选 (cli,xfce,gnome)
-              - cli: command line 文本界面
-              - xfce : xfce图形界面
-              - gnome : gnome图形界面
             - "rockdev" 镜像类型，包括一下三种类型
               - rockdev: RKDevTool + 多个小image镜像（uboot.img、boot.img、rootfs.img等）
               - update : RKdevTool + update.img
@@ -295,15 +285,12 @@ jobs:
 
             2. 系统密码
 
-            - 用户名：root     密码 1234
-            - 用户名：teamhd   密码 teamhd
-            - 用户名：linaro   密码 linaro
-            - 用户名：admin    密码 admin
+            - 默认用户名(Default username): root
+            - 默认密码(Default password): 123
 
             3. rockdev构建输出(rockdev.squashfs/rockdev.rar)
 
             带windows更新工具RKDevTool，开箱即用。包含以下目录结构，windows下载后解压，执行RKDevTool.exe即可。
-
             ```
             RKDevTool/
             ├── bin
