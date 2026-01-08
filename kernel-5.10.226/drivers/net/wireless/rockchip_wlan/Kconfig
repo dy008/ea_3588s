@@ -40,7 +40,6 @@ source "drivers/net/wireless/rockchip_wlan/cywdhd/Kconfig"
 source "drivers/net/wireless/rockchip_wlan/infineon/Kconfig"
 
 # kdev
-source "drivers/net/wireless/rockchip_wlan/rtl8852bs/Kconfig"
-source "drivers/net/wireless/rockchip_wlan/rtl8852bu/Kconfig"
+#source "drivers/net/wireless/rockchip_wlan/rtl8852bs/Kconfig"
 
 endif # WL_ROCKCHIP
