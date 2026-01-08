@@ -185,7 +185,7 @@ jobs:
           sudo cp -a /builder/ea_3588s.git/official/extra  /mnt/lib/modules/5.10.160/
 
           # add wifibt script
-          sudo cp -a /builder/ea_3588s.git/official/wifibt-init.service /mnt/usr/lib/systemd/system/
+          sudo cp -a /builder/ea_3588s.git/official/wifibt-init.service /mnt/lib/systemd/system/
 
           # add scripts
           sudo cp -a /builder/ea_3588s.git/official/scripts/*.sh  /mnt/bin/
