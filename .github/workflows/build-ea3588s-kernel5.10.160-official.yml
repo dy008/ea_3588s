@@ -44,8 +44,8 @@ jobs:
             set_desktop: xfce
 
           # Ubuntu 20.04 LTS (standard support ended Apr 2025)
-          - set_release: focal
-            set_desktop: mini
+#          - set_release: focal
+#            set_desktop: mini
 
           # Ubuntu 22.04 LTS (supported until 2027)
           - set_release: jammy
@@ -64,12 +64,12 @@ jobs:
             set_desktop: xfce
 
           # Ubuntu 24.10 (interim release, EOL Jul 2025)
-          - set_release: oracular
-            set_desktop: mini
-          - set_release: oracular
-            set_desktop: gnome
-          - set_release: oracular
-            set_desktop: xfce
+#          - set_release: oracular
+#            set_desktop: mini
+#          - set_release: oracular
+#            set_desktop: gnome
+#          - set_release: oracular
+#            set_desktop: xfce
 
           # Ubuntu 25.04 (planned interim, Apr 2025)
           - set_release: plucky
