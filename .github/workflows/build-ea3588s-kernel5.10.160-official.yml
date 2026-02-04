@@ -9,7 +9,7 @@ env:
   TZ: America/New_York
 
 jobs:
-  build:
+  kdevbuild:
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false

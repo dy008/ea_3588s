@@ -30,8 +30,6 @@ apt-get install -y --no-install-recommends \
   sudo swig tar tree u-boot-tools udev unzip util-linux uuid uuid-dev uuid-runtime vim wget whiptail \
   xfsprogs xsltproc xxd xz-utils zip zlib1g-dev zstd binwalk ripgrep
 localedef -i zh_CN -f UTF-8 zh_CN.UTF-8 || true
-timedatectl set-timezone America/New_York
-
 
 #==================================================================#
 #                        build uboot                               #
