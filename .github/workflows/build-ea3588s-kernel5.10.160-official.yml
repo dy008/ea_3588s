@@ -26,7 +26,7 @@ jobs:
         # oracular   Ubuntu  24.10  普通版（非LTS）	2024年10月	支持至 2025年7月（仅9个月）
         # plucky     Ubuntu  25.04  普通版（计划）	预计 2025年4月	尚未发布，开发代号
         # resolute   Ubuntu  25.10  普通版（计划）	预计 2025年10月	未来版本，已公布代号
-        set_desktop: [ cli, gnome, xfce ]
+        set_desktop: [ minimal, gnome, xfce ]
         exclude:
           - set_release: bullseye
             set_desktop: gnome
@@ -91,7 +91,7 @@ jobs:
             - "ea_3588s" 固定前缀
             - "noble" 发行版，可选 (bullseye, bookworm, jammy, noble, focal, forky, oracular, plucky, resolute, trixie)
             - "5.10.160" 内核版本号
-            - "cli" 桌面环境，可选 (cli,xfce,gnome)
+            - "minimal" 桌面环境，可选 (minimal,xfce,gnome)
             - "rockdev" 镜像类型，包括一下三种类型
               - rockdev: RKDevTool + 多个小image镜像（uboot.img、boot.img、rootfs.img等）
               - update : RKdevTool + update.img
