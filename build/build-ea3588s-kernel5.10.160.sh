@@ -33,16 +33,17 @@ localedef -i zh_CN -f UTF-8 zh_CN.UTF-8 || true
 #==================================================================#
 #                        build uboot                               #
 #==================================================================#
-cd ${WORKDIR}/u-boot-v2017
-./ea3588s.sh
-md5sum ../rockdev/uboot.img
+cd ${WORKDIR}/
+mkdir -p rockdev
+cp ${WORKDIR}/official/uboot/uboot.img rockdev/uboot.img
+
 
 #==================================================================#
 #                        build kernel                              #
 #==================================================================#
-cd ${WORKDIR}/kernel-5.10.226
-./ea3588s.sh
-md5sum ../rockdev/boot.img
+cd ${WORKDIR}/
+mkdir -p rockdev
+cp ${WORKDIR}/official/boot/boot.img rockdev/boot.img
 
 #==================================================================#
 #                        build rootfs                              #

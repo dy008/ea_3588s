@@ -27,7 +27,7 @@ apt-get install -y --no-install-recommends \
   pixz pkg-config pv python2 python2-dev python3 python3-dev python3-distutils python3-pip \
   python3-setuptools python-is-python3 qemu-user-static rar rdfind rename rsync sed squashfs-tools \
   swig tar tree u-boot-tools udev unzip util-linux uuid uuid-dev uuid-runtime vim wget whiptail \
-  xfsprogs xsltproc xxd xz-utils zip zlib1g-dev zstd binwalk ripgrep
+  xfsprogs xsltproc xxd xz-utils zip zlib1g-dev zstd binwalk ripgrep sudo
 localedef -i zh_CN -f UTF-8 zh_CN.UTF-8 || true
 
 #==================================================================#
