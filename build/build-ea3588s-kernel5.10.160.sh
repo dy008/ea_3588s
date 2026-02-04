@@ -117,7 +117,7 @@ chroot /mnt sh -c "/hack-rootfs.sh"
 sync
 umount /mnt
 sync
-mv ${WORKDIR}/rootfs/armbian.git/output/images/rootfs.img ${WORKDIR}/rockdev/boot.img
+mv ${WORKDIR}/rootfs/armbian.git/output/images/rootfs.img ${WORKDIR}/rockdev/rootfs.img
 
 #==========================================================================#
 # Script Name: Generate Rockchip Updatable Image                           #
