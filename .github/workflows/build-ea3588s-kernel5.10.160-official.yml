@@ -86,16 +86,23 @@ jobs:
             ### ea_3588s镜像说明
 
             1. 镜像命名规则
-            以 **EA_3588S_noble_5.10.160_cli_rockdev.img.rar** 为例
+            以 **EA_3588S_k5.10.160_${RELEASE}_${DESKTOP}_update.rar** 为例
 
-            - "ea_3588s" 固定前缀
-            - "noble" 发行版，可选 (bullseye, bookworm, jammy, noble, focal, forky, oracular, plucky, resolute, trixie)
-            - "5.10.160" 内核版本号
-            - "minimal" 桌面环境，可选 (minimal,xfce,gnome)
-            - "rockdev" 镜像类型，包括一下三种类型
-              - rockdev: RKDevTool + 多个小image镜像（uboot.img、boot.img、rootfs.img等）
+            - "${RELEASE}" 发行版，可选一下几种发行版
+              - bullseye - Debian 11
+              - bookworm - Debian 12
+              - trixie   - Debian 13
+              - forky    - Debian 14
+              - focal    - Ubuntu 20.04 LTS
+              - jammy    - Ubuntu 22.04 LTS
+              - noble    - Ubuntu 24.04 LTS
+              - oracular - Ubuntu 24.10
+              - plucky   - Ubuntu 25.04
+              - resolute - Ubuntu 25.10
+            - "${DESKTOP}" 桌面环境，可选 (minimal,xfce,gnome)
+            - 镜像类型，有两种类型
+              - rockdev: RKDevTool + 分区镜像（uboot.img、boot.img、rootfs.img）
               - update : RKdevTool + update.img
-              - rootfs : 仅rootfs镜像
 
             2. 系统密码
 
@@ -104,9 +111,10 @@ jobs:
             - 用户名: teamhd 密码: teamhd
             - 用户名: linaro 密码: linaro
 
-            3. rockdev构建输出(rockdev.squashfs/rockdev.rar)
+            3. rockdev构建输出(rockdev.rar)
 
-            带windows更新工具RKDevTool，开箱即用。包含以下目录结构，windows下载后解压，执行RKDevTool.exe即可。
+            解压后打开RKDevTool.exe，选择'下载镜像'，点击'执行'即可
+
             ```
             RKDevTool/
             ├── bin
@@ -125,19 +133,16 @@ jobs:
                 └── image
                     ├── boot.img
                     ├── MiniLoaderAll.bin
-                    ├── misc.img
                     ├── modules.tar.gz
-                    ├── oem.img
                     ├── package-file
                     ├── parameter.txt
-                    ├── recovery.img
                     ├── rootfs.img
                     └── uboot.img
             ```
 
-            4. update镜像构建输出(update.img.squashfs/update.img.rar)
+            4. update镜像构建输出(update.rar)
 
-            解压后输出update.img镜像，请使用 RKDevTool.exe 固件更新
+            解压后打开RKDevTool.exe，选择'升级固件'，点击'固件'，勾选镜像文件rockdev/img/update.img，点击'升级'即可
 
             ```
             RKDevTool/
