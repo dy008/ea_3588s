@@ -41,7 +41,7 @@ md5sum ../rockdev/uboot.img
 #==================================================================#
 #                        build kernel                              #
 #==================================================================#
-cd ${WORKDIR}/u-boot-v2017
+cd ${WORKDIR}/kernel-5.10.226
 ./ea3588s.sh
 md5sum ../rockdev/boot.img
 
