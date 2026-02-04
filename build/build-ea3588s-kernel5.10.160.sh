@@ -106,6 +106,7 @@ ls -alh ${WORKDIR}/rootfs/armbian.git/output/images/
 chmod +x ${WORKDIR}/tools/extract-rootfs-from-armbian.sh
 ${WORKDIR}/tools/extract-rootfs-from-armbian.sh ${WORKDIR}/rootfs/armbian.git/output/images/
 ls -alh ${WORKDIR}/rootfs/armbian.git/output/images/rootfs.img
+md5sum ${WORKDIR}/rootfs/armbian.git/output/images/rootfs.img
 
 # hack rootfs
 mount ${WORKDIR}/rootfs/armbian.git/output/images/rootfs.img /mnt

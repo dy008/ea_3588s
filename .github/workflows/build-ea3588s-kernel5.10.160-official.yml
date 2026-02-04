@@ -14,23 +14,69 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # set_release: [ bullseye, bookworm, jammy, noble ]
-        set_release: [ bullseye, bookworm, jammy, noble, focal, forky, oracular, plucky, resolute, trixie ]
-        # bullseye   Debian  11	    Oldstable（旧稳定版）	2021年8月	安全支持将持续至 2026年6月（LTS）
-        # bookworm   Debian  12	    Stable（当前稳定版）	2023年6月	当前官方推荐稳定版本
-        # trixie     Debian  13	    Testing（测试版）	预计 2025 年中发布	当前处于开发冻结前阶段
-        # forky      Debian  14	    Unstable（未来开发版）	尚未发布	在 sid 之后的下一个开发代号
-        # focal      Ubuntu  20.04  LTS（长期支持）	2020年4月	标准支持已于 2025年4月结束；需 Ubuntu Pro 获取扩展安全维护（ESM）
-        # jammy      Ubuntu  22.04  LTS	2022年4月	免费支持至 2027年4月（桌面/服务器）
-        # noble      Ubuntu  24.04  LTS	2024年4月	最新 LTS，支持至 2029年4月
-        # oracular   Ubuntu  24.10  普通版（非LTS）	2024年10月	支持至 2025年7月（仅9个月）
-        # plucky     Ubuntu  25.04  普通版（计划）	预计 2025年4月	尚未发布，开发代号
-        # resolute   Ubuntu  25.10  普通版（计划）	预计 2025年10月	未来版本，已公布代号
-        set_desktop: [ mini, gnome, xfce ]
-        exclude:
+        include:
+          # Debian 11 (oldstable, EOL ～2026)
           - set_release: bullseye
+            set_desktop: mini
+
+          # Debian 12 (stable)
+          - set_release: bookworm
+            set_desktop: mini
+          - set_release: bookworm
             set_desktop: gnome
-          - set_release: bullseye
+          - set_release: bookworm
+            set_desktop: xfce
+
+          # Debian 13 (testing)
+          - set_release: trixie
+            set_desktop: mini
+          - set_release: trixie
+            set_desktop: gnome
+          - set_release: trixie
+            set_desktop: xfce
+
+          # Debian 14 (unstable, future)
+          - set_release: forky
+            set_desktop: mini
+          - set_release: forky
+            set_desktop: gnome
+          - set_release: forky
+            set_desktop: xfce
+
+          # Ubuntu 20.04 LTS (standard support ended Apr 2025)
+          - set_release: focal
+            set_desktop: mini
+
+          # Ubuntu 22.04 LTS (supported until 2027)
+          - set_release: jammy
+            set_desktop: mini
+          - set_release: jammy
+            set_desktop: gnome
+          - set_release: jammy
+            set_desktop: xfce
+
+          # Ubuntu 24.04 LTS (current LTS, supported until 2029)
+          - set_release: noble
+            set_desktop: mini
+          - set_release: noble
+            set_desktop: gnome
+          - set_release: noble
+            set_desktop: xfce
+
+          # Ubuntu 24.10 (interim release, EOL Jul 2025)
+          - set_release: oracular
+            set_desktop: mini
+          - set_release: oracular
+            set_desktop: gnome
+          - set_release: oracular
+            set_desktop: xfce
+
+          # Ubuntu 25.04 (planned interim, Apr 2025)
+          - set_release: plucky
+            set_desktop: mini
+          - set_release: plucky
+            set_desktop: gnome
+          - set_release: plucky
             set_desktop: xfce
 
     steps:

@@ -14,23 +14,69 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # set_release: [ bullseye, bookworm, jammy, noble ]
-        set_release: [ bullseye, bookworm, jammy, noble, focal, forky, oracular, plucky, resolute, trixie ]
-        # bullseye   Debian  11	    Oldstable（旧稳定版）	2021年8月	安全支持将持续至 2026年6月（LTS）
-        # bookworm   Debian  12	    Stable（当前稳定版）	2023年6月	当前官方推荐稳定版本
-        # trixie     Debian  13	    Testing（测试版）	预计 2025 年中发布	当前处于开发冻结前阶段
-        # forky      Debian  14	    Unstable（未来开发版）	尚未发布	在 sid 之后的下一个开发代号
-        # focal      Ubuntu  20.04  LTS（长期支持）	2020年4月	标准支持已于 2025年4月结束；需 Ubuntu Pro 获取扩展安全维护（ESM）
-        # jammy      Ubuntu  22.04  LTS	2022年4月	免费支持至 2027年4月（桌面/服务器）
-        # noble      Ubuntu  24.04  LTS	2024年4月	最新 LTS，支持至 2029年4月
-        # oracular   Ubuntu  24.10  普通版（非LTS）	2024年10月	支持至 2025年7月（仅9个月）
-        # plucky     Ubuntu  25.04  普通版（计划）	预计 2025年4月	尚未发布，开发代号
-        # resolute   Ubuntu  25.10  普通版（计划）	预计 2025年10月	未来版本，已公布代号
-        set_desktop: [ minimal, gnome, xfce ]
-        exclude:
+        include:
+          # Debian 11 (oldstable, EOL ～2026)
           - set_release: bullseye
+            set_desktop: mini
+
+          # Debian 12 (stable)
+          - set_release: bookworm
+            set_desktop: mini
+          - set_release: bookworm
             set_desktop: gnome
-          - set_release: bullseye
+          - set_release: bookworm
+            set_desktop: xfce
+
+          # Debian 13 (testing)
+          - set_release: trixie
+            set_desktop: mini
+          - set_release: trixie
+            set_desktop: gnome
+          - set_release: trixie
+            set_desktop: xfce
+
+          # Debian 14 (unstable, future)
+          - set_release: forky
+            set_desktop: mini
+          - set_release: forky
+            set_desktop: gnome
+          - set_release: forky
+            set_desktop: xfce
+
+          # Ubuntu 20.04 LTS (standard support ended Apr 2025)
+          - set_release: focal
+            set_desktop: mini
+
+          # Ubuntu 22.04 LTS (supported until 2027)
+          - set_release: jammy
+            set_desktop: mini
+          - set_release: jammy
+            set_desktop: gnome
+          - set_release: jammy
+            set_desktop: xfce
+
+          # Ubuntu 24.04 LTS (current LTS, supported until 2029)
+          - set_release: noble
+            set_desktop: mini
+          - set_release: noble
+            set_desktop: gnome
+          - set_release: noble
+            set_desktop: xfce
+
+          # Ubuntu 24.10 (interim release, EOL Jul 2025)
+          - set_release: oracular
+            set_desktop: mini
+          - set_release: oracular
+            set_desktop: gnome
+          - set_release: oracular
+            set_desktop: xfce
+
+          # Ubuntu 25.04 (planned interim, Apr 2025)
+          - set_release: plucky
+            set_desktop: mini
+          - set_release: plucky
+            set_desktop: gnome
+          - set_release: plucky
             set_desktop: xfce
 
     steps:
@@ -86,16 +132,23 @@ jobs:
             ### ea_3588s镜像说明
 
             1. 镜像命名规则
-            以 **EA_3588S_noble_5.10.226_cli_rockdev.img.rar** 为例
+            以 **EA_3588S_k5.10.226_${RELEASE}_${DESKTOP}_update.rar** 为例
 
-            - "ea_3588s" 固定前缀
-            - "noble" 发行版，可选 (bullseye, bookworm, jammy, noble, focal, forky, oracular, plucky, resolute, trixie)
-            - "5.10.226" 内核版本号
-            - "minimal" 桌面环境，可选 (minimal,xfce,gnome)
-            - "rockdev" 镜像类型，包括一下三种类型
-              - rockdev: RKDevTool + 多个小image镜像（uboot.img、boot.img、rootfs.img等）
+            - "${RELEASE}" 发行版，可选一下几种发行版
+              - bullseye - Debian 11
+              - bookworm - Debian 12
+              - trixie   - Debian 13
+              - forky    - Debian 14
+              - focal    - Ubuntu 20.04 LTS
+              - jammy    - Ubuntu 22.04 LTS
+              - noble    - Ubuntu 24.04 LTS
+              - oracular - Ubuntu 24.10
+              - plucky   - Ubuntu 25.04
+              - resolute - Ubuntu 25.10
+            - "${DESKTOP}" 桌面环境，可选 (mini,xfce,gnome)
+            - 镜像类型，有两种类型
+              - rockdev: RKDevTool + 分区镜像（uboot.img、boot.img、rootfs.img）
               - update : RKdevTool + update.img
-              - rootfs : 仅rootfs镜像
 
             2. 系统密码
 
@@ -104,9 +157,10 @@ jobs:
             - 用户名: teamhd 密码: teamhd
             - 用户名: linaro 密码: linaro
 
-            3. rockdev构建输出(rockdev.squashfs/rockdev.rar)
+            3. rockdev构建输出(rockdev.rar)
 
-            带windows更新工具RKDevTool，开箱即用。包含以下目录结构，windows下载后解压，执行RKDevTool.exe即可。
+            解压后打开RKDevTool.exe，选择'下载镜像'，点击'执行'即可
+
             ```
             RKDevTool/
             ├── bin
@@ -125,19 +179,16 @@ jobs:
                 └── image
                     ├── boot.img
                     ├── MiniLoaderAll.bin
-                    ├── misc.img
                     ├── modules.tar.gz
-                    ├── oem.img
                     ├── package-file
                     ├── parameter.txt
-                    ├── recovery.img
                     ├── rootfs.img
                     └── uboot.img
             ```
 
-            4. update镜像构建输出(update.img.squashfs/update.img.rar)
+            4. update镜像构建输出(update.rar)
 
-            解压后输出update.img镜像，请使用 RKDevTool.exe 固件更新
+            解压后打开RKDevTool.exe，选择'升级固件'，点击'固件'，勾选镜像文件rockdev/img/update.img，点击'升级'即可
 
             ```
             RKDevTool/
