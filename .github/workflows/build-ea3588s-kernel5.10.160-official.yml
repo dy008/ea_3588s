@@ -16,16 +16,16 @@ jobs:
       matrix:
         # set_release: [ bullseye, bookworm, jammy, noble ]
         set_release: [ bullseye, bookworm, jammy, noble, focal, forky, oracular, plucky, resolute, trixie ]
-        # bullseye	Debian 11	    Oldstable（旧稳定版）	2021年8月	安全支持将持续至 2026年6月（LTS）
-        # bookworm	Debian 12	    Stable（当前稳定版）	2023年6月	当前官方推荐稳定版本
-        # trixie	Debian 13	    Testing（测试版）	预计 2025 年中发布	当前处于开发冻结前阶段
-        # forky	    Debian 14	    Unstable（未来开发版）	尚未发布	在 sid 之后的下一个开发代号
-        # focal	    Ubuntu 20.04	LTS（长期支持）	2020年4月	标准支持已于 2025年4月结束；需 Ubuntu Pro 获取扩展安全维护（ESM）
-        # jammy	    Ubuntu 22.04	LTS	2022年4月	免费支持至 2027年4月（桌面/服务器）
-        # noble	    Ubuntu 24.04	LTS	2024年4月	最新 LTS，支持至 2029年4月
-        # oracular	Ubuntu 24.10	普通版（非LTS）	2024年10月	支持至 2025年7月（仅9个月）
-        # plucky	Ubuntu 25.04	普通版（计划）	预计 2025年4月	尚未发布，开发代号
-        # resolute	Ubuntu 25.10	普通版（计划）	预计 2025年10月	未来版本，已公布代号
+        # bullseye   Debian  11	    Oldstable（旧稳定版）	2021年8月	安全支持将持续至 2026年6月（LTS）
+        # bookworm   Debian  12	    Stable（当前稳定版）	2023年6月	当前官方推荐稳定版本
+        # trixie     Debian  13	    Testing（测试版）	预计 2025 年中发布	当前处于开发冻结前阶段
+        # forky      Debian  14	    Unstable（未来开发版）	尚未发布	在 sid 之后的下一个开发代号
+        # focal      Ubuntu  20.04  LTS（长期支持）	2020年4月	标准支持已于 2025年4月结束；需 Ubuntu Pro 获取扩展安全维护（ESM）
+        # jammy      Ubuntu  22.04  LTS	2022年4月	免费支持至 2027年4月（桌面/服务器）
+        # noble      Ubuntu  24.04  LTS	2024年4月	最新 LTS，支持至 2029年4月
+        # oracular   Ubuntu  24.10  普通版（非LTS）	2024年10月	支持至 2025年7月（仅9个月）
+        # plucky     Ubuntu  25.04  普通版（计划）	预计 2025年4月	尚未发布，开发代号
+        # resolute   Ubuntu  25.10  普通版（计划）	预计 2025年10月	未来版本，已公布代号
         set_desktop: [ cli, gnome, xfce ]
         exclude:
           - set_release: bullseye
@@ -48,8 +48,6 @@ jobs:
           df -h
           cat /proc/cpuinfo
           cat /proc/meminfo
-          echo "build_tag=EA_3588S_${{ matrix.set_release }}_5.10.160_${{ matrix.set_desktop }}" >> ${GITHUB_OUTPUT}
-          echo "status=success" >> ${GITHUB_OUTPUT}
 
       - name: Run build in Ubuntu 22.04 container
         working-directory: ${{ github.workspace }}
@@ -72,15 +70,14 @@ jobs:
 
       - name: List build output
         run: |
-          ls -alh  ${{ github.workspace }}/output/*
-          md5sum ${{ github.workspace }}/output/*
-
+          ls -alh  ${{ github.workspace }}/release/*
+          md5sum ${{ github.workspace }}/release/*
 
       - name: Upload Image to Release
         uses: ncipollo/release-action@main
         with:
           tag: EA_3588S-kernel-5.10.160-official
-          artifacts: ${{ github.workspace }}/rockdev/*.img
+          artifacts: ${{ github.workspace }}/release/*
           allowUpdates: true
           removeArtifacts: false
           replacesArtifacts: true
