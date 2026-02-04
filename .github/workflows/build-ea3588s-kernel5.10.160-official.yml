@@ -33,8 +33,6 @@ jobs:
           - set_release: bullseye
             set_desktop: xfce
 
-    if: ${{ github.event.repository.owner.id }} == ${{ github.event.sender.id }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -55,11 +53,13 @@ jobs:
 
       - name: Run build in Ubuntu 22.04 container
         working-directory: ${{ github.workspace }}
-        if: ${{ steps.basic_info.outputs.status }} == 'success' && !cancelled()
         run: |
           pwd
           ls -alh
-          docker run --rm \
+          sudo docker run --rm \
+            --privileged \
+            --cap-add SYS_ADMIN \
+            -v /dev:/dev \
             -v ${{ github.workspace }}:/workspace \
             -w /workspace \
             -e set_release=${{ matrix.set_release }} \
@@ -78,7 +78,6 @@ jobs:
 
       - name: Upload Image to Release
         uses: ncipollo/release-action@main
-        if: ${{ steps.generate_rockdev_image.outputs.status }} == 'success' && !cancelled()
         with:
           tag: EA_3588S-kernel-5.10.160-official
           artifacts: ${{ github.workspace }}/rockdev/*.img

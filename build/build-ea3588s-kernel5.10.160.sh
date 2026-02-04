@@ -31,6 +31,13 @@ apt-get install -y --no-install-recommends \
   xfsprogs xsltproc xxd xz-utils zip zlib1g-dev zstd binwalk ripgrep
 localedef -i zh_CN -f UTF-8 zh_CN.UTF-8 || true
 
+
+dd if=/dev/zero of=dd.img bs=1M count=100
+mkfs.ext4 -F dd.img
+sudo mkdir -p /mnt/ddimg
+sudo mount -o loop dd.img /mnt/ddimg
+
+
 #==================================================================#
 #                        build uboot                               #
 #==================================================================#
