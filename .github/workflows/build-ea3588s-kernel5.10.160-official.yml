@@ -1,0 +1,163 @@
+name: kernel 5.10.160 for EA_3588S(official)
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+    inputs:
+
+env:
+  TZ: America/New_York
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        # set_release: [ bullseye, bookworm, jammy, noble ]
+        set_release: [ bullseye, bookworm, jammy, noble, focal, forky, oracular, plucky, resolute, trixie ]
+        # bullseye	Debian 11	    Oldstable（旧稳定版）	2021年8月	安全支持将持续至 2026年6月（LTS）
+        # bookworm	Debian 12	    Stable（当前稳定版）	2023年6月	当前官方推荐稳定版本
+        # trixie	Debian 13	    Testing（测试版）	预计 2025 年中发布	当前处于开发冻结前阶段
+        # forky	    Debian 14	    Unstable（未来开发版）	尚未发布	在 sid 之后的下一个开发代号
+        # focal	    Ubuntu 20.04	LTS（长期支持）	2020年4月	标准支持已于 2025年4月结束；需 Ubuntu Pro 获取扩展安全维护（ESM）
+        # jammy	    Ubuntu 22.04	LTS	2022年4月	免费支持至 2027年4月（桌面/服务器）
+        # noble	    Ubuntu 24.04	LTS	2024年4月	最新 LTS，支持至 2029年4月
+        # oracular	Ubuntu 24.10	普通版（非LTS）	2024年10月	支持至 2025年7月（仅9个月）
+        # plucky	Ubuntu 25.04	普通版（计划）	预计 2025年4月	尚未发布，开发代号
+        # resolute	Ubuntu 25.10	普通版（计划）	预计 2025年10月	未来版本，已公布代号
+        set_desktop: [ cli, gnome, xfce ]
+        exclude:
+          - set_release: bullseye
+            set_desktop: gnome
+          - set_release: bullseye
+            set_desktop: xfce
+
+    if: ${{ github.event.repository.owner.id }} == ${{ github.event.sender.id }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show environment
+        id: basic_info
+        run: |
+          nproc
+          uname -a
+          cat /etc/*release
+          free -h
+          mount
+          df -h
+          cat /proc/cpuinfo
+          cat /proc/meminfo
+          echo "build_tag=EA_3588S_${{ matrix.set_release }}_5.10.160_${{ matrix.set_desktop }}" >> ${GITHUB_OUTPUT}
+          echo "status=success" >> ${GITHUB_OUTPUT}
+
+      - name: Run build in Ubuntu 22.04 container
+        working-directory: ${{ github.workspace }}
+        if: ${{ steps.basic_info.outputs.status }} == 'success' && !cancelled()
+        run: |
+          pwd
+          ls -alh
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            -w /workspace \
+            -e set_release=${{ matrix.set_release }} \
+            -e set_desktop=${{ matrix.set_desktop }} \
+            ubuntu:22.04 \
+            bash -c "
+              chmod +x /workspace/build/build-ea3588s-kernel5.10.160.sh ;
+              /workspace/build/build-ea3588s-kernel5.10.160.sh
+            "
+
+      - name: List build output
+        run: |
+          ls -alh  ${{ github.workspace }}/output/*
+          md5sum ${{ github.workspace }}/output/*
+
+
+      - name: Upload Image to Release
+        uses: ncipollo/release-action@main
+        if: ${{ steps.generate_rockdev_image.outputs.status }} == 'success' && !cancelled()
+        with:
+          tag: EA_3588S-kernel-5.10.160-official
+          artifacts: ${{ github.workspace }}/rockdev/*.img
+          allowUpdates: true
+          removeArtifacts: false
+          replacesArtifacts: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          body: |
+            ### ea_3588s镜像说明
+
+            1. 镜像命名规则
+            以 **EA_3588S_noble_5.10.160_cli_rockdev.img.rar** 为例
+
+            - "ea_3588s" 固定前缀
+            - "noble" 发行版，可选 (bullseye, bookworm, jammy, noble, focal, forky, oracular, plucky, resolute, trixie)
+            - "5.10.160" 内核版本号
+            - "cli" 桌面环境，可选 (cli,xfce,gnome)
+            - "rockdev" 镜像类型，包括一下三种类型
+              - rockdev: RKDevTool + 多个小image镜像（uboot.img、boot.img、rootfs.img等）
+              - update : RKdevTool + update.img
+              - rootfs : 仅rootfs镜像
+
+            2. 系统密码
+
+            - 用户名: root   密码: 1234
+            - 用户名: admin  密码: admin
+            - 用户名: teamhd 密码: teamhd
+            - 用户名: linaro 密码: linaro
+
+            3. rockdev构建输出(rockdev.squashfs/rockdev.rar)
+
+            带windows更新工具RKDevTool，开箱即用。包含以下目录结构，windows下载后解压，执行RKDevTool.exe即可。
+            ```
+            RKDevTool/
+            ├── bin
+            │         ├── adb.exe
+            │         ├── AdbWinApi.dll
+            │         ├── AdbWinUsbApi.dll
+            │         ├── AFPTool.exe
+            │         └── RKImageMaker.exe
+            ├── config.cfg
+            ├── config.ini
+            ├── Language
+            │         ├── Chinese.ini
+            │         └── English.ini
+            ├── RKDevTool.exe
+            └── rockdev
+                └── image
+                    ├── boot.img
+                    ├── MiniLoaderAll.bin
+                    ├── misc.img
+                    ├── modules.tar.gz
+                    ├── oem.img
+                    ├── package-file
+                    ├── parameter.txt
+                    ├── recovery.img
+                    ├── rootfs.img
+                    └── uboot.img
+            ```
+
+            4. update镜像构建输出(update.img.squashfs/update.img.rar)
+
+            解压后输出update.img镜像，请使用 RKDevTool.exe 固件更新
+
+            ```
+            RKDevTool/
+            ├── bin
+            │         ├── adb.exe
+            │         ├── AdbWinApi.dll
+            │         ├── AdbWinUsbApi.dll
+            │         ├── AFPTool.exe
+            │         └── RKImageMaker.exe
+            ├── config.cfg
+            ├── config.ini
+            ├── Language
+            │         ├── Chinese.ini
+            │         └── English.ini
+            ├── RKDevTool.exe
+            └── rockdev
+                └── image
+                    └── update.img
+            ```
