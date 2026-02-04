@@ -3,14 +3,12 @@
 set -euxo pipefail
 
 WORKDIR=$(pwd)
-OUTPUT_DIR="${WORKDIR}/output"
 export build_tag="EA_3588S_k5.10.160_${set_release}_${set_desktop}"
 export DEBIAN_FRONTEND=noninteractive
 
 #==========================================================================#
 #                        init build env                                    #
 #==========================================================================#
-mkdir -p "${OUTPUT_DIR}"
 apt-get update
 apt-get install -y ca-certificates
 apt-get install -y --no-install-recommends \
