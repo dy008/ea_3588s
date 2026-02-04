@@ -44,8 +44,8 @@ jobs:
             set_desktop: xfce
 
           # Ubuntu 20.04 LTS (standard support ended Apr 2025)
-          - set_release: focal
-            set_desktop: mini
+#          - set_release: focal
+#            set_desktop: mini
 
           # Ubuntu 22.04 LTS (supported until 2027)
           - set_release: jammy
@@ -122,7 +122,7 @@ jobs:
       - name: Upload Image to Release
         uses: ncipollo/release-action@main
         with:
-          tag: EA_3588S-kernel-5.10.226-official
+          tag: EA_3588S-kernel-5.10.226
           artifacts: ${{ github.workspace }}/release/*
           allowUpdates: true
           removeArtifacts: false

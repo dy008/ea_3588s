@@ -118,6 +118,7 @@ sync
 umount /mnt
 sync
 mv ${WORKDIR}/rootfs/armbian.git/output/images/rootfs.img ${WORKDIR}/rockdev/rootfs.img
+ls -alh ${WORKDIR}/rockdev
 
 #==========================================================================#
 # Script Name: Generate Rockchip Updatable Image                           #
