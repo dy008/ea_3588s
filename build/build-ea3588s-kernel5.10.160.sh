@@ -40,7 +40,7 @@ localedef -i zh_CN -f UTF-8 zh_CN.UTF-8 || true
 #                        build uboot                                       #
 #==========================================================================#
 cd ${WORKDIR}/
-mkdir -p rockdev
+mkdir -p ${WORKDIR}/rockdev
 cp ${WORKDIR}/official/uboot/uboot.img ${WORKDIR}/rockdev/uboot.img
 
 
@@ -49,7 +49,7 @@ cp ${WORKDIR}/official/uboot/uboot.img ${WORKDIR}/rockdev/uboot.img
 #                        build kernel                                      #
 #==========================================================================#
 cd ${WORKDIR}/
-mkdir -p rockdev
+mkdir -p ${WORKDIR}/rockdev
 cp ${WORKDIR}/official/boot/boot.img ${WORKDIR}/rockdev/boot.img
 
 #==========================================================================#
@@ -116,12 +116,7 @@ chroot /mnt sh -c "/hack-rootfs.sh"
 sync
 umount /mnt
 sync
-mkdir -p ${WORKDIR}/release
-mkdir -p ${WORKDIR}/ouput-temp/
-cp -a ${WORKDIR}/template/* ${WORKDIR}/ouput-temp/
-cp -a ${WORKDIR}/rockdev/uboot.img ${WORKDIR}/ouput-temp/
-cp -a ${WORKDIR}/rockdev/boot.img ${WORKDIR}/ouput-temp/
-mv ${WORKDIR}/rootfs/armbian.git/output/images/rootfs.img ${WORKDIR}/ouput-temp/
+mv ${WORKDIR}/rootfs/armbian.git/output/images/rootfs.img ${WORKDIR}/rockdev/boot.img
 
 #==========================================================================#
 # Script Name: Generate Rockchip Updatable Image                           #
