@@ -41,7 +41,7 @@ localedef -i zh_CN -f UTF-8 zh_CN.UTF-8 || true
 #==========================================================================#
 cd ${WORKDIR}/
 mkdir -p rockdev
-cp ${WORKDIR}/official/uboot/uboot.img rockdev/uboot.img
+cp ${WORKDIR}/official/uboot/uboot.img ${WORKDIR}/rockdev/uboot.img
 
 
 
@@ -50,7 +50,7 @@ cp ${WORKDIR}/official/uboot/uboot.img rockdev/uboot.img
 #==========================================================================#
 cd ${WORKDIR}/
 mkdir -p rockdev
-cp ${WORKDIR}/official/boot/boot.img rockdev/boot.img
+cp ${WORKDIR}/official/boot/boot.img ${WORKDIR}/rockdev/boot.img
 
 #==========================================================================#
 # Task: Build Root Filesystem (rootfs) using Armbian Build System          #
@@ -73,7 +73,7 @@ if [ -z "${set_desktop}" ] || [ -z "${set_release}" ]; then
 fi
 mkdir -p ${WORKDIR}/rootfs
 cd ${WORKDIR}/rootfs
-if [ "${set_desktop}" == "minimal" ]; then
+if [ "${set_desktop}" == "mini" ]; then
   BUILD_DESKTOP="BUILD_DESKTOP=no"
 else
   BUILD_DESKTOP=" \
@@ -141,35 +141,45 @@ mv ${WORKDIR}/rootfs/armbian.git/output/images/rootfs.img ${WORKDIR}/ouput-temp/
 #       specified directories before running this script.                  #
 #==========================================================================#
 
-# rootfs.img   : ${WORKDIR}/ouput-temp/rootfs.img
-# uboot.img    : ${WORKDIR}/ouput-temp/uboot.img
-# boot.img     : ${WORKDIR}/ouput-temp/boot.img
-# RKDevTool    : ${WORKDIR}/tools/RKDevTool
-# afptool      : ${WORKDIR}/tools/afptool
-# rkImageMaker : ${WORKDIR}/tools/rkImageMaker
-# template     : ${WORKDIR}/ouput-temp
-mkdir -p ${WORKDIR}/release
-mkdir -p ${WORKDIR}/output-updatable-image
-# copy RKDevTool
-cp -a ${WORKDIR}/tools/RKDevTool ${WORKDIR}/output-updatable-image/
-mkdir -p ${WORKDIR}/output-updatable-image/RKDevTool/rockdev/image/
-# copy template
-cp -a ${WORKDIR}/ouput-temp/* \
-  ${WORKDIR}/output-updatable-image/RKDevTool/rockdev/image/
+# rootfs.img   : ${WORKDIR}/rockdev/rootfs.img
+# uboot.img    : ${WORKDIR}/rockdev/uboot.img
+# boot.img     : ${WORKDIR}/rockdev/boot.img
+# RKDevTool    : ${WORKDIR}/rockchip-tools.git/RKDevTool-v3.19-RK3588/
+# afptool      : ${WORKDIR}/rockchip-tools.git/afptool
+# rkImageMaker : ${WORKDIR}/rockchip-tools.git/rkImageMaker
+# template     : ${WORKDIR}/update_img_tmp/
+# output       : ${WORKDIR}/release/
 
-chmod +x ${WORKDIR}/tools/afptool
-chmod +x ${WORKDIR}/tools/rkImageMaker
-cd ${WORKDIR}/output-updatable-image/RKDevTool/rockdev/image/
-${WORKDIR}/tools/afptool -pack . temp.img
-${WORKDIR}/tools/rkImageMaker -RK3588 MiniLoaderAll.bin temp.img update.img -os_type:androidos
+cd ${WORKDIR}
+git clone https://github.com/yifengyou/rockchip-tools.git rockchip-tools.git
+ls -alh ${WORKDIR}/rockchip-tools.git
+chmod +x ${WORKDIR}/rockchip-tools.git/afptool
+chmod +x ${WORKDIR}/rockchip-tools.git/rkImageMaker
+
+mkdir -p ${WORKDIR}/release
+mkdir -p ${WORKDIR}/update_img_tmp
+cp -a ${WORKDIR}/rockchip-tools.git/RKDevTool-v3.19-RK3588  \
+  ${WORKDIR}/update_img_tmp/RKDevTool
+mkdir -p ${WORKDIR}/update_img_tmp/RKDevTool/rockdev/image/
+
+cp -a ${WORKDIR}/rockdev/uboot.img   ${WORKDIR}/update_img_tmp/RKDevTool/rockdev/image/
+cp -a ${WORKDIR}/rockdev/boot.img    ${WORKDIR}/update_img_tmp/RKDevTool/rockdev/image/
+cp -a ${WORKDIR}/rockdev/rootfs.img  ${WORKDIR}/update_img_tmp/RKDevTool/rockdev/image/
+
+cd ${WORKDIR}/update_img_tmp/RKDevTool/rockdev/image/
+${WORKDIR}/rockchip-tools.git/afptool -pack . temp.img
+${WORKDIR}/rockchip-tools.git/rkImageMaker \
+  -RK3588 MiniLoaderAll.bin \
+  temp.img \
+  update.img \
+  -os_type:androidos
 find . -type f ! -name "update.img" -exec rm -f {} \;
 
 # generate update.img
-cd ${WORKDIR}/output-updatable-image/
-mksquashfs RKDevTool ${WORKDIR}/release/${build_tag}_update.img.squashfs &&
-  rar a ${WORKDIR}/release/${build_tag}_update.img.rar RKDevTool
-sha256sum ${WORKDIR}/release/${build_tag}_update.img.squashfs >${WORKDIR}/release/${build_tag}_update.img.squashfs.sha256
-sha256sum ${WORKDIR}/release/${build_tag}_update.img.rar >${WORKDIR}/release/${build_tag}_update.img.rar.sha256
+cd ${WORKDIR}/update_img_tmp/
+rar a ${WORKDIR}/release/${build_tag}_update.rar RKDevTool
+cd ${WORKDIR}/release/
+sha256sum ${build_tag}_update.rar
 
 #==========================================================================#
 # Script Purpose: Generate Rockchip Firmware Image with RKDevTool          #
@@ -190,29 +200,29 @@ sha256sum ${WORKDIR}/release/${build_tag}_update.img.rar >${WORKDIR}/release/${b
 #       the ${WORKDIR}/rockdev/ directory prior to running this script.    #
 #==========================================================================#
 
-# rootfs.img   : ${WORKDIR}/ouput-temp/rootfs.img
-# uboot.img    : ${WORKDIR}/ouput-temp/uboot.img
-# boot.img     : ${WORKDIR}/ouput-temp/boot.img
-# RKDevTool    : ${WORKDIR}/tools/RKDevTool
-# afptool      : ${WORKDIR}/tools/afptool
-# rkImageMaker : ${WORKDIR}/tools/rkImageMaker
-# template     : ${WORKDIR}/ouput-temp
+# rootfs.img   : ${WORKDIR}/rockdev/rootfs.img
+# uboot.img    : ${WORKDIR}/rockdev/uboot.img
+# boot.img     : ${WORKDIR}/rockdev/boot.img
+# RKDevTool    : ${WORKDIR}/rockchip-tools.git/RKDevTool-v3.19-RK3588/
+# afptool      : ${WORKDIR}/rockchip-tools.git/afptool
+# rkImageMaker : ${WORKDIR}/rockchip-tools.git/rkImageMaker
+# template     : ${WORKDIR}/update_img_tmp/
+# output       : ${WORKDIR}/release/
 
 mkdir -p ${WORKDIR}/release
-mkdir -p ${WORKDIR}/output-rockdev-image
-# copy RKDevTool
-cp -a ${WORKDIR}/tools/RKDevTool ${WORKDIR}/output-rockdev-image/
-mkdir -p ${WORKDIR}/output-rockdev-image/RKDevTool/rockdev/image/
-# copy template
-cp -a ${WORKDIR}/ouput-temp/* \
-  ${WORKDIR}/output-rockdev-image/RKDevTool/rockdev/image/
+mkdir -p ${WORKDIR}/rockdev_img_tmp
+cp -a ${WORKDIR}/rockchip-tools.git/RKDevTool-v3.19-RK3588  \
+  ${WORKDIR}/rockdev_img_tmp/RKDevTool
+mkdir -p ${WORKDIR}/rockdev_img_tmp/RKDevTool/rockdev/image/
 
-# generate rockdev.img
-cd ${WORKDIR}/output-rockdev-image/
-mksquashfs RKDevTool ${WORKDIR}/release/${build_tag}_rockdev.img.squashfs &&
-  rar a ${WORKDIR}/release/${build_tag}_rockdev.img.rar RKDevTool
-sha256sum ${WORKDIR}/release/${build_tag}_rockdev.img.squashfs > ${WORKDIR}/release/${build_tag}_rockdev.img.squashfs.sha256
-sha256sum ${WORKDIR}/release/${build_tag}_rockdev.img.rar > ${WORKDIR}/release/${build_tag}_rockdev.img.rar.sha256
+cp -a ${WORKDIR}/rockdev/uboot.img   ${WORKDIR}/rockdev_img_tmp/RKDevTool/rockdev/image/
+cp -a ${WORKDIR}/rockdev/boot.img    ${WORKDIR}/rockdev_img_tmp/RKDevTool/rockdev/image/
+cp -a ${WORKDIR}/rockdev/rootfs.img  ${WORKDIR}/rockdev_img_tmp/RKDevTool/rockdev/image/
+
+cd ${WORKDIR}/rockdev_img_tmp/
+rar a ${WORKDIR}/release/${build_tag}_rockdev.rar RKDevTool
+cd ${WORKDIR}/release/
+sha256sum ${build_tag}_rockdev.rar
 
 ls -alh ${WORKDIR}/release/
 

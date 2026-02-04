@@ -61,7 +61,7 @@ fi
 
 mkdir -p ${WORKDIR}/rootfs
 cd ${WORKDIR}/rootfs
-if [ "${set_desktop}" == "minimal" ]; then
+if [ "${set_desktop}" == "mini" ]; then
   BUILD_DESKTOP="BUILD_DESKTOP=no"
 else
   BUILD_DESKTOP=" \
@@ -108,6 +108,7 @@ chroot /mnt sh -c "/hack-rootfs.sh"
 sync
 umount /mnt
 sync
+
 mkdir -p ${WORKDIR}/release
 mkdir -p ${WORKDIR}/ouput-temp/
 cp -a ${WORKDIR}/template/* ${WORKDIR}/ouput-temp/
